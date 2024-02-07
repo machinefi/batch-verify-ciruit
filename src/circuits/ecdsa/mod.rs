@@ -1,4 +1,5 @@
 pub mod ecdsa;
+pub mod verifycircuit;
 
 use super::{ecc, integer};
 
