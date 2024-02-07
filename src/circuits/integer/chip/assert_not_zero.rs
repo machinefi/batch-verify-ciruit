@@ -1,8 +1,8 @@
 use super::IntegerChip;
 use crate::circuits::integer::{AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::Assigned;
-use crate::circuits::maingate::{halo2, CombinationOptionCommon, MainGateInstructions, RegionCtx, Term};
+use crate::circuits::maingate::{CombinationOptionCommon, MainGateInstructions, RegionCtx, Term};
 use num_bigint::BigUint as big_uint;
 use std::convert::TryInto;
 

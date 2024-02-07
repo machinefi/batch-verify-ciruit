@@ -1,9 +1,9 @@
 use super::IntegerChip;
 use crate::circuits::integer::rns::MaybeReduced;
 use crate::circuits::integer::{AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 
-use crate::circuits::maingate::{halo2, AssignedValue, MainGateInstructions, RangeInstructions, RegionCtx, Term};
+use crate::circuits::maingate::{AssignedValue, MainGateInstructions, RangeInstructions, RegionCtx, Term};
 
 impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>

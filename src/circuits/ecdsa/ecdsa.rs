@@ -1,13 +1,13 @@
 use super::integer::{IntegerChip, IntegerConfig};
-use crate::circuits::halo2wrong::halo2;
 use crate::circuits::integer;
 use crate::circuits::maingate;
 use crate::circuits::ecc;
+use crate::circuits::FieldExt;
 use ecc::maingate::MainGateInstructions;
 use ecc::maingate::RegionCtx;
 use ecc::{AssignedPoint, EccConfig, GeneralEccChip};
-use halo2::arithmetic::{CurveAffine, FieldExt};
-use halo2::plonk::Error;
+use halo2_curves::CurveAffine;
+use halo2_proofs::plonk::Error;
 use integer::rns::Integer;
 use integer::{AssignedInteger, IntegerInstructions};
 use maingate::{MainGateConfig, RangeConfig};
@@ -91,7 +91,7 @@ impl<E: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LI
         Self(ecc_chip)
     }
 
-    pub fn scalar_field_chip(&self) -> IntegerChip<E::ScalarExt, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB> {
+    pub fn scalar_field_chip(&self) -> IntegerChip<E::ScalarExt, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB> where <E as CurveAffine>::ScalarExt: FieldExt {
         self.0.scalar_field_chip()
     }
 
@@ -294,11 +294,10 @@ impl<E: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LI
 mod tests {
     use super::AssignedEcdsaStarSig;
     use super::{AssignedEcdsaSig, AssignedPublicKey, EcdsaChip};
-    use crate::circuits::halo2wrong::halo2;
-    use crate::circuits::integer;
+    use crate::circuits::{integer, FieldExt};
     use crate::circuits::maingate;
     use crate::circuits::ecc;
-    use halo2::halo2curves::CurveExt;
+    use halo2_curves::{CurveAffine, CurveExt};
     use integer::{AssignedInteger, Range};
     use ecc::maingate::big_to_fe;
     use ecc::maingate::fe_to_big;
@@ -307,11 +306,9 @@ mod tests {
     use group::ff::Field;
     use group::prime::PrimeCurveAffine;
     use group::{Curve, Group};
-    use halo2::arithmetic::CurveAffine;
-    use halo2::arithmetic::FieldExt;
-    use halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use halo2::dev::MockProver;
-    use halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use integer::{IntegerInstructions, NUMBER_OF_LOOKUP_LIMBS};
     use maingate::{MainGate, MainGateConfig, RangeChip, RangeConfig, RangeInstructions};
     use num_bigint::BigUint;

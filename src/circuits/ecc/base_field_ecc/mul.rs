@@ -2,8 +2,8 @@ use super::{AssignedPoint, BaseFieldEccChip};
 use crate::circuits::maingate::{AssignedCondition, AssignedValue, MainGateInstructions};
 use crate::circuits::ecc::{Selector, Table, Windowed};
 use group::ff::PrimeField;
-use crate::circuits::halo2wrong::halo2::arithmetic::CurveAffine;
-use crate::circuits::halo2wrong::halo2::plonk::Error;
+use halo2_curves::CurveAffine;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 
 impl<C: CurveAffine, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>

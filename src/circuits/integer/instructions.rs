@@ -1,8 +1,8 @@
 use super::{AssignedInteger, UnassignedInteger};
-use crate::circuits::maingate::{halo2, AssignedCondition, RegionCtx};
+use crate::circuits::maingate::{AssignedCondition, RegionCtx};
 use crate::circuits::integer::rns::Integer;
-use halo2::arithmetic::FieldExt;
-use halo2::plonk::Error;
+use crate::circuits::FieldExt;
+use halo2_proofs::plonk::Error;
 
 /// Signals the range mode that should be applied while assigning a new
 /// [`Integer`]

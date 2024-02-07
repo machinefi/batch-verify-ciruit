@@ -4,9 +4,9 @@ use super::{AssignedInteger, AssignedLimb, UnassignedInteger};
 use crate::circuits::integer::instructions::{IntegerInstructions, Range};
 use crate::circuits::integer::rns::{Common, Integer, Rns};
 use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
-use halo2::arithmetic::FieldExt;
-use halo2::plonk::Error;
-use crate::circuits::maingate::{halo2, AssignedCondition, AssignedValue, MainGateInstructions, RegionCtx};
+use crate::circuits::FieldExt;
+use halo2_proofs::plonk::Error;
+use crate::circuits::maingate::{AssignedCondition, AssignedValue, MainGateInstructions, RegionCtx};
 use crate::circuits::maingate::{MainGate, MainGateConfig};
 use crate::circuits::maingate::{RangeChip, RangeConfig};
 
@@ -538,14 +538,13 @@ mod tests {
     use super::{IntegerChip, IntegerConfig, IntegerInstructions, Range};
     use crate::circuits::integer::rns::{Common, Integer, Rns};
     use crate::circuits::integer::{UnassignedInteger, NUMBER_OF_LOOKUP_LIMBS};
-    // use crate::{FieldExt, UnassignedInteger, NUMBER_OF_LOOKUP_LIMBS};
+    use crate::circuits::FieldExt;
     use core::panic;
-    use halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use halo2::dev::MockProver;
-    use halo2::halo2curves::FieldExt;
-    use halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use crate::circuits::maingate::{
-        big_to_fe, decompose_big, fe_to_big, halo2, AssignedCondition, MainGate, MainGateConfig,
+        big_to_fe, decompose_big, fe_to_big, AssignedCondition, MainGate, MainGateConfig,
         MainGateInstructions, RangeChip, RangeConfig, RangeInstructions, RegionCtx,
     };
     use num_bigint::{BigUint as big_uint, RandBigInt};

@@ -1,7 +1,6 @@
-use crate::circuits::maingate;
+use crate::circuits::{maingate, FieldExt};
 use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
-use halo2::arithmetic::FieldExt;
-use maingate::{big_to_fe, compose, decompose_big, fe_to_big, halo2, modulus};
+use maingate::{big_to_fe, compose, decompose_big, fe_to_big, modulus};
 use num_bigint::BigUint as big_uint;
 use num_integer::Integer as _;
 use num_traits::{Num, One, Zero};

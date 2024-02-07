@@ -2,13 +2,12 @@
 //! gate. While many of implmentations takes place here they can be overriden
 //! for optimisation purposes.
 
-use crate::circuits::halo2wrong::{
+use crate::circuits::{halo2wrong::{
     utils::{big_to_fe, decompose, fe_to_big, power_of_two},
     RegionCtx,
-};
+}, FieldExt};
 
-use crate::circuits::halo2wrong::halo2::{
-    arithmetic::FieldExt,
+use halo2_proofs::{
     circuit::{Chip, Layouter},
     plonk::Error,
 };

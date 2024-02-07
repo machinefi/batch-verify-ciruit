@@ -3,9 +3,10 @@ use crate::circuits::integer::{AssignedInteger, IntegerInstructions};
 use crate::circuits::maingate::{AssignedCondition, MainGateInstructions};
 // use crate::circuits::halo2wrong::{halo2, Selector, Table, Windowed};
 use crate::circuits::ecc::{Selector, Table, Windowed};
+use crate::circuits::FieldExt;
 use group::ff::PrimeField;
-use crate::circuits::halo2wrong::halo2::arithmetic::{CurveAffine, FieldExt};
-use crate::circuits::halo2wrong::halo2::plonk::Error;
+use halo2_curves::CurveAffine;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 
 impl<

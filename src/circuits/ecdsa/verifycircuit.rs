@@ -4,11 +4,12 @@ use std::{marker::PhantomData, ops::Mul};
 use group::ff::Field;
 use group::Curve;
 use group::prime::PrimeCurveAffine;
-use halo2::{circuit::{Layouter, SimpleFloorPlanner}, halo2curves::{CurveAffine, CurveExt, FieldExt}, plonk::{Circuit, ConstraintSystem, Error}};
+use halo2_proofs::{circuit::{Layouter, SimpleFloorPlanner}, halo2curves::{CurveAffine, CurveExt}, plonk::{Circuit, ConstraintSystem, Error}};
 use rand::thread_rng;
 use sha2::{Digest, Sha256};
 
 use crate::circuits::halo2wrong::utils::{big_to_fe, fe_to_big};
+use crate::circuits::FieldExt;
 use crate::circuits::{ecc::{EccConfig, GeneralEccChip}, halo2wrong::RegionCtx, integer::{AssignedInteger, IntegerInstructions, Range, NUMBER_OF_LOOKUP_LIMBS}, maingate::{MainGate, MainGateConfig, RangeChip, RangeConfig, RangeInstructions}};
 
 use super::ecdsa::{AssignedEcdsaSig, AssignedPublicKey, EcdsaChip};

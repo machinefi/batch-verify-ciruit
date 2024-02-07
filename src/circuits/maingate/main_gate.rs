@@ -8,13 +8,13 @@
 //! public_input +
 //! q_constant = 0
 
-use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
-use crate::circuits::halo2wrong::halo2::circuit::{Chip, Layouter};
-use crate::circuits::halo2wrong::halo2::plonk::{Advice, Column, ConstraintSystem, Error, Fixed, Instance};
-use crate::circuits::halo2wrong::halo2::poly::Rotation;
+use halo2_proofs::circuit::{Chip, Layouter};
+use halo2_proofs::plonk::{Advice, Column, ConstraintSystem, Error, Fixed, Instance};
+use halo2_proofs::poly::Rotation;
 use crate::circuits::maingate::instructions::{ColumnTags, CombinationOptionCommon, MainGateInstructions, Term};
 use crate::circuits::maingate::{Assigned, AssignedCondition, AssignedValue, UnassignedValue};
 use crate::circuits::halo2wrong::RegionCtx;
+use crate::circuits::FieldExt;
 use std::marker::PhantomData;
 
 const WIDTH: usize = 5;
@@ -506,10 +506,10 @@ mod tests {
 
     use super::{MainGate, MainGateConfig, Term};
     use crate::circuits::halo2wrong::curves::pasta::Fp;
-    use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
-    use crate::circuits::halo2wrong::halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use crate::circuits::halo2wrong::halo2::dev::MockProver;
-    use crate::circuits::halo2wrong::halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use crate::circuits::FieldExt;
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use crate::circuits::maingate::main_gate::{CombinationOptionCommon, MainGateInstructions};
     use crate::circuits::maingate::{AssignedCondition, UnassignedValue};
     use group::ff::PrimeField;

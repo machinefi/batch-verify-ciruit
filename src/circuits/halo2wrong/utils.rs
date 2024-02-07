@@ -1,7 +1,8 @@
-use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
 use num_bigint::BigUint as big_uint;
 use num_traits::{Num, One, Zero};
 use std::ops::Shl;
+
+use crate::circuits::FieldExt;
 
 pub fn modulus<F: FieldExt>() -> big_uint {
     big_uint::from_str_radix(&F::MODULUS[2..], 16).unwrap()

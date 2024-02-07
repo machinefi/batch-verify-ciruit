@@ -1,8 +1,7 @@
 use super::AssignedPoint;
 use super::BaseFieldEccChip;
-use crate::circuits::halo2wrong::halo2;
-use halo2::arithmetic::CurveAffine;
-use halo2::plonk::Error;
+use halo2_curves::CurveAffine;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 use crate::circuits::integer::IntegerInstructions;
 

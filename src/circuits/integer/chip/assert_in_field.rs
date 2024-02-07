@@ -1,8 +1,8 @@
 use super::{IntegerChip, Range};
 use crate::circuits::integer::{AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::{
-    halo2, AssignedValue, CombinationOptionCommon, MainGateInstructions, RegionCtx, Term,
+    AssignedValue, CombinationOptionCommon, MainGateInstructions, RegionCtx, Term,
 };
 
 impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>

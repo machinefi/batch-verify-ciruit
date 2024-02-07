@@ -5,6 +5,7 @@
 #![deny(missing_docs)]
 
 pub use base_field_ecc::*;
+use halo2_curves::CurveAffine;
 pub use general_ecc::*;
 
 /// Constraints for the SW curve that are used in the same proof system
@@ -19,9 +20,9 @@ pub mod general_ecc;
 pub use crate::circuits::maingate;
 
 #[cfg(test)]
-use halo2::halo2curves as curves;
+use halo2_curves as curves;
 
-use crate::circuits::halo2wrong::halo2::arithmetic::{CurveAffine, FieldExt};
+// use crate::circuits::halo2wrong::halo2::arithmetic::{CurveAffine, FieldExt};
 use crate::circuits::integer::chip::IntegerConfig;
 use crate::circuits::integer::rns::{Integer, Rns};
 use crate::circuits::integer::AssignedInteger;
@@ -31,6 +32,8 @@ use num_bigint::BigUint as big_uint;
 use num_traits::One;
 use std::fmt;
 use std::rc::Rc;
+
+use super::FieldExt;
 
 
 /// Represent a Point in affine coordinates

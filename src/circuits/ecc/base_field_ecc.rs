@@ -1,10 +1,10 @@
 use super::{make_mul_aux, AssignedPoint, EccConfig, MulAux, Point};
 use crate::circuits::integer::chip::IntegerChip;
 use crate::circuits::integer::rns::{Integer, Rns};
+use halo2_curves::CurveAffine;
 // use crate::circuits::{halo2, maingate};
-use crate::circuits::halo2wrong::halo2::arithmetic::CurveAffine;
-use crate::circuits::halo2wrong::halo2::circuit::Layouter;
-use crate::circuits::halo2wrong::halo2::plonk::Error;
+use halo2_proofs::circuit::Layouter;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::{MainGateInstructions, RegionCtx};
 use crate::circuits::integer::{IntegerInstructions, Range, UnassignedInteger};
 use crate::circuits::maingate::{AssignedCondition, MainGate};
@@ -359,12 +359,13 @@ mod tests {
     // use crate::halo2;
     use crate::circuits::integer::rns::Rns;
     use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
+    use crate::circuits::FieldExt;
     // use crate::maingate;
     use group::{Curve as _, Group};
-    use halo2::arithmetic::{CurveAffine, FieldExt};
-    use halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use halo2::dev::MockProver;
-    use halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use halo2_curves::CurveAffine;
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use crate::circuits::maingate::RegionCtx;
     use crate::circuits::maingate::{
         AssignedValue, MainGate, MainGateConfig, MainGateInstructions, RangeChip, RangeConfig,
