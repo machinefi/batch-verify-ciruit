@@ -1,4 +1,4 @@
-use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
+use halo2_curves::ff::WithSmallOrderMulGroup as FieldExt;
 use num_bigint::BigUint as big_uint;
 use num_traits::{Num, One, Zero};
 use std::ops::Shl;

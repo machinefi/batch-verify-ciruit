@@ -16,14 +16,13 @@
 //! of decomposed value is in 16 bit range.
 
 use super::main_gate::{MainGate, MainGateColumn, MainGateConfig};
-// use crate::circuits::halo2wrong;
-use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
-use crate::circuits::halo2wrong::halo2::circuit::Chip;
-use crate::circuits::halo2wrong::halo2::circuit::Value;
-use crate::circuits::halo2wrong::halo2::circuit::Layouter;
-use crate::circuits::halo2wrong::halo2::plonk::{ConstraintSystem, Error};
-use crate::circuits::halo2wrong::halo2::plonk::{Selector, TableColumn};
-use crate::circuits::halo2wrong::halo2::poly::Rotation;
+use halo2_curves::ff::WithSmallOrderMulGroup as FieldExt;
+use halo2_proofs::circuit::Chip;
+use halo2_proofs::circuit::Value;
+use halo2_proofs::circuit::Layouter;
+use halo2_proofs::plonk::{ConstraintSystem, Error};
+use halo2_proofs::plonk::{Selector, TableColumn};
+use halo2_proofs::poly::Rotation;
 use crate::circuits::maingate::instructions::{CombinationOptionCommon, MainGateInstructions, Term};
 use crate::circuits::maingate::{AssignedValue, UnassignedValue};
 use crate::circuits::halo2wrong::RegionCtx;
@@ -400,10 +399,10 @@ mod tests {
     use crate::circuits::halo2wrong::RegionCtx;
     use super::{RangeChip, RangeConfig, RangeInstructions};
     use crate::circuits::halo2wrong::curves::pasta::Fp;
-    use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
-    use crate::circuits::halo2wrong::halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use crate::circuits::halo2wrong::halo2::dev::MockProver;
-    use crate::circuits::halo2wrong::halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use halo2_curves::ff::WithSmallOrderMulGroup as FieldExt;
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use crate::circuits::maingate::main_gate::MainGate;
     use crate::circuits::maingate::UnassignedValue;
     use crate::circuits::maingate::range::NUMBER_OF_LOOKUP_LIMBS;

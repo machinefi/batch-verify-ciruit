@@ -1,5 +1,5 @@
 use super::{AssignedInteger, UnassignedInteger};
-use crate::circuits::maingate::{halo2, AssignedCondition, RegionCtx};
+use crate::circuits::maingate::{AssignedCondition, RegionCtx};
 use crate::circuits::integer::rns::Integer;
 use halo2::arithmetic::FieldExt;
 use halo2::plonk::Error;

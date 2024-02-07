@@ -1,12 +1,12 @@
-use halo2::{
-    arithmetic::FieldExt,
+use halo2_curves::ff::WithSmallOrderMulGroup as FieldExt;
+use halo2_proofs::{
     circuit::{AssignedCell, Cell, Region, Value},
     plonk::{Advice, Column, Error, Fixed, Selector},
 };
 
 pub mod utils;
-pub use halo2;
-pub use halo2::halo2curves as curves;
+pub use halo2_proofs;
+pub use halo2_curves as curves;
 
 pub struct RegionCtx<'a, 'b, F: FieldExt> {
     pub region: &'a mut Region<'b, F>,

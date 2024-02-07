@@ -7,8 +7,8 @@ use crate::circuits::halo2wrong::{
     RegionCtx,
 };
 
-use crate::circuits::halo2wrong::halo2::{
-    arithmetic::FieldExt,
+use halo2_curves::ff::WithSmallOrderMulGroup as FieldExt;
+use halo2_proofs::{
     circuit::{Chip, Layouter},
     plonk::Error,
 };
