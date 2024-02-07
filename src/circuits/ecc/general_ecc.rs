@@ -3,9 +3,9 @@ use super::{make_mul_aux, AssignedPoint, EccConfig, MulAux, Point};
 use crate::circuits::integer::rns::{Integer, Rns};
 use crate::circuits::integer::{IntegerChip, IntegerInstructions, Range, UnassignedInteger};
 // use crate::maingate;
-use halo2::arithmetic::{CurveAffine, FieldExt};
-use halo2::circuit::Layouter;
-use halo2::plonk::Error;
+use pasta_curves::arithmetic::{CurveAffine, FieldExt};
+use halo2_proofs::circuit::Layouter;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 use crate::circuits::maingate::{AssignedCondition, MainGate};
 use std::collections::BTreeMap;
@@ -408,10 +408,10 @@ mod tests {
     use crate::circuits::integer::{AssignedInteger, IntegerInstructions};
     // use crate::circuitsmaingate;
     use group::{Curve as _, Group};
-    use halo2::arithmetic::{CurveAffine, FieldExt};
-    use halo2::circuit::{Layouter, SimpleFloorPlanner};
-    use halo2::dev::MockProver;
-    use halo2::plonk::{Circuit, ConstraintSystem, Error};
+    use pasta_curves::arithmetic::{CurveAffine, FieldExt};
+    use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
+    use halo2_proofs::dev::MockProver;
+    use halo2_proofs::plonk::{Circuit, ConstraintSystem, Error};
     use crate::circuits::integer::rns::Integer;
     use crate::circuits::integer::Range;
     use crate::circuits::maingate::{

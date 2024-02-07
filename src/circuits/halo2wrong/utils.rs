@@ -1,4 +1,4 @@
-use crate::circuits::halo2wrong::halo2::arithmetic::FieldExt;
+use pasta_curves::arithmetic::FieldExt;
 use num_bigint::BigUint as big_uint;
 use num_traits::{Num, One, Zero};
 use std::ops::Shl;

@@ -7,8 +7,9 @@
 
 use super::halo2wrong;
 
-use halo2::plonk::Error;
-use halo2::{arithmetic::FieldExt, circuit::Cell};
+use halo2_proofs::plonk::Error;
+use halo2_proofs::circuit::Cell;
+use pasta_curves::arithmetic::FieldExt;
 use halo2wrong::utils::decompose;
 use std::marker::PhantomData;
 
@@ -17,7 +18,7 @@ mod instructions;
 mod main_gate;
 mod range;
 
-pub use halo2wrong::{halo2, utils::*, RegionCtx};
+pub use halo2wrong::{utils::*, RegionCtx};
 pub use instructions::{CombinationOptionCommon, MainGateInstructions, Term};
 pub use main_gate::*;
 pub use range::*;

@@ -4,8 +4,8 @@ use crate::circuits::maingate::{AssignedCondition, MainGateInstructions};
 // use crate::circuits::halo2wrong::{halo2, Selector, Table, Windowed};
 use crate::circuits::ecc::{Selector, Table, Windowed};
 use group::ff::PrimeField;
-use crate::circuits::halo2wrong::halo2::arithmetic::{CurveAffine, FieldExt};
-use crate::circuits::halo2wrong::halo2::plonk::Error;
+use pasta_curves::arithmetic::{CurveAffine, FieldExt};
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 
 impl<

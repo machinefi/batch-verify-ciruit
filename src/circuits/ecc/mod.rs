@@ -19,9 +19,9 @@ pub mod general_ecc;
 pub use crate::circuits::maingate;
 
 #[cfg(test)]
-use halo2::halo2curves as curves;
+use halo2_curves as curves;
 
-use crate::circuits::halo2wrong::halo2::arithmetic::{CurveAffine, FieldExt};
+use pasta_curves::arithmetic::{CurveAffine, FieldExt};
 use crate::circuits::integer::chip::IntegerConfig;
 use crate::circuits::integer::rns::{Integer, Rns};
 use crate::circuits::integer::AssignedInteger;

@@ -1,13 +1,13 @@
 use super::integer::{IntegerChip, IntegerConfig};
-use crate::circuits::halo2wrong::halo2;
+// use crate::circuits::halo2wrong::halo2;
 use crate::circuits::integer;
 use crate::circuits::maingate;
 use crate::circuits::ecc;
 use ecc::maingate::MainGateInstructions;
 use ecc::maingate::RegionCtx;
 use ecc::{AssignedPoint, EccConfig, GeneralEccChip};
-use halo2::arithmetic::{CurveAffine, FieldExt};
-use halo2::plonk::Error;
+use pasta_curves::arithmetic::{CurveAffine, FieldExt};
+use halo2_proofs::plonk::Error;
 use integer::rns::Integer;
 use integer::{AssignedInteger, IntegerInstructions};
 use maingate::{MainGateConfig, RangeConfig};

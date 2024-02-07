@@ -7,7 +7,8 @@
 
 
 use crate::circuits::integer::rns::{Common, Integer, Limb};
-use halo2::{arithmetic::FieldExt, circuit::Cell};
+use pasta_curves::arithmetic::FieldExt;
+use halo2_proofs::circuit::Cell;
 use crate::circuits::maingate::{big_to_fe, compose, fe_to_big, Assigned, AssignedValue, UnassignedValue};
 use num_bigint::BigUint as big_uint;
 use rns::Rns;
@@ -16,10 +17,10 @@ use std::rc::Rc;
 pub use chip::{IntegerChip, IntegerConfig};
 pub use instructions::{IntegerInstructions, Range};
 // pub use maingate;
-pub use crate::circuits::halo2wrong::halo2;
+// pub use crate::circuits::halo2wrong::halo2;
 
 #[cfg(test)]
-use halo2::halo2curves as curves;
+use halo2_curves as curves;
 
 
 

@@ -10,7 +10,7 @@ edition = "2021"
 num-bigint = { version = "0.4", features = ["rand"] }
 num-integer = "0.1"
 num-traits = "0.2"
-halo2 = { package = "halo2_proofs", git = "https://github.com/privacy-scaling-explorations/halo2", branch = "abstraction" }
+# halo2 = { package = "halo2_proofs", git = "https://github.com/privacy-scaling-explorations/halo2", branch = "abstraction" }
 group = "0.12"
 
 # integer
@@ -25,6 +25,7 @@ subtle = { version = "2.3", default-features = false }
 sha2 = "0.9"
 hex = "0.4.3"
 
+pasta_curves = "0.4.0"
 # generator
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2023_04_20", features = ["dev-graph"]}
 halo2_curves = { git = "https://github.com/privacy-scaling-explorations/halo2curves", tag = "0.3.2", package = "halo2curves" }

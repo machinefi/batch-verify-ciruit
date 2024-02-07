@@ -1,8 +1,8 @@
 use super::{IntegerChip, IntegerInstructions, Range};
 use crate::circuits::integer::{rns::Integer, AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::{
-    halo2, Assigned, AssignedCondition, CombinationOptionCommon, MainGateInstructions, RegionCtx,
+    Assigned, AssignedCondition, CombinationOptionCommon, MainGateInstructions, RegionCtx,
     Term,
 };
 use std::rc::Rc;

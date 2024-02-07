@@ -1,10 +1,10 @@
 use super::{IntegerChip, IntegerInstructions, Range};
 use crate::circuits::integer::rns::MaybeReduced;
 use crate::circuits::integer::{AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::Assigned;
 use crate::circuits::maingate::{
-    halo2, AssignedCondition, AssignedValue, CombinationOptionCommon, MainGateInstructions,
+    AssignedCondition, AssignedValue, CombinationOptionCommon, MainGateInstructions,
     RangeInstructions, RegionCtx, Term,
 };
 

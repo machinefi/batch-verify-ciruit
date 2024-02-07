@@ -1,9 +1,9 @@
 use super::{IntegerChip, IntegerInstructions, Range};
 use crate::circuits::integer::{rns::MaybeReduced, AssignedInteger, FieldExt};
-use halo2::plonk::Error;
+use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::Assigned;
 use crate::circuits::maingate::{
-    halo2, AssignedValue, CombinationOptionCommon, MainGateInstructions, RangeInstructions,
+    AssignedValue, CombinationOptionCommon, MainGateInstructions, RangeInstructions,
     RegionCtx, Term,
 };
 

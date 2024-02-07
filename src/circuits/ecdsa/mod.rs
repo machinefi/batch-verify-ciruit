@@ -8,6 +8,6 @@ use super::{ecc, integer};
 // pub(crate) use ecc::maingate;
 
 #[cfg(test)]
-use halo2::halo2curves as curves;
+use halo2_curves as curves;
 
 
