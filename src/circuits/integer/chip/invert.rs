@@ -1,13 +1,15 @@
 use super::{IntegerChip, IntegerInstructions, Range};
-use crate::circuits::integer::{rns::Integer, AssignedInteger, FieldExt};
+use crate::circuits::integer::{rns::Integer, AssignedInteger};
 use halo2_proofs::plonk::Error;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use crate::circuits::maingate::{
     Assigned, AssignedCondition, CombinationOptionCommon, MainGateInstructions, RegionCtx,
     Term,
 };
 use std::rc::Rc;
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     pub(super) fn invert_generic(
@@ -56,18 +58,18 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         let cond = a_mul_inv
             .limb(0)
             .value()
-            .map(|a_mul_inv| N::one() - a_mul_inv);
+            .map(|a_mul_inv| N::ONE - a_mul_inv);
 
         let cond = main_gate.apply(
             ctx,
             &[
-                Term::Assigned(a_mul_inv.limb(0), N::one()),
-                Term::Unassigned(cond, N::one()),
+                Term::Assigned(a_mul_inv.limb(0), N::ONE),
+                Term::Unassigned(cond, N::ONE),
                 Term::Zero,
                 Term::Zero,
                 Term::Zero,
             ],
-            -N::one(),
+            -N::ONE,
             CombinationOptionCommon::OneLinerMul.into(),
         )?[1];
 

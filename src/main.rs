@@ -1,16 +1,16 @@
 use std::{io::BufReader, marker::PhantomData};
 
-use halo2::halo2curves::bn256::Fr as BnScalar;
-use halo2::halo2curves::secp256k1::Secp256k1Affine as Secp256k1;
+use halo2_proofs::halo2curves::bn256::Fr as BnScalar;
+use halo2_proofs::halo2curves::secp256k1::Secp256k1Affine as Secp256k1;
 
 use batch_verify_circuit::{
-    circuits::ecdsa::verifycircuit::IntegratedCircuit,
+    circuits::{ecdsa::verifycircuit::IntegratedCircuit, FieldExt},
     generator::{gen_pk, gen_proof},
 };
 use group::{Curve, Group};
-use halo2::{
+use halo2_proofs::{
     dev::MockProver,
-    halo2curves::{CurveAffine, FieldExt},
+    halo2curves::CurveAffine,
 };
 use halo2_curves::bn256::Bn256;
 use halo2_proofs::poly::{commitment::Params, kzg::commitment::ParamsKZG};

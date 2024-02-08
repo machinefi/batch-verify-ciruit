@@ -359,7 +359,8 @@ mod tests {
     // use crate::halo2;
     use crate::circuits::integer::rns::Rns;
     use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
-    use crate::circuits::FieldExt;
+    use halo2_proofs::arithmetic::Field;
+    use halo2_proofs::halo2curves::ff::PrimeField;
     // use crate::maingate;
     use group::{Curve as _, Group};
     use halo2_curves::CurveAffine;
@@ -422,7 +423,7 @@ mod tests {
             }
         }
 
-        fn config_range<N: FieldExt>(&self, layouter: &mut impl Layouter<N>) -> Result<(), Error> {
+        fn config_range<N: PrimeField>(&self, layouter: &mut impl Layouter<N>) -> Result<(), Error> {
             let bit_len_lookup = BIT_LEN_LIMB / NUMBER_OF_LOOKUP_LIMBS;
             let range_chip = RangeChip::<N>::new(self.range_config.clone(), bit_len_lookup);
             range_chip.load_limb_range_table(layouter)?;

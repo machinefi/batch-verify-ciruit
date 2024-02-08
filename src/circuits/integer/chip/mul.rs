@@ -1,14 +1,16 @@
 use super::{IntegerChip, IntegerInstructions, Range};
 use crate::circuits::integer::rns::{Common, Integer, MaybeReduced};
-use crate::circuits::integer::{AssignedInteger, FieldExt};
+use crate::circuits::integer::AssignedInteger;
 use halo2_proofs::plonk::Error;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use crate::circuits::maingate::Assigned;
 use crate::circuits::maingate::{
     AssignedValue, CombinationOptionCommon, MainGateInstructions, RangeInstructions,
     RegionCtx, Term,
 };
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     pub(super) fn constrain_binary_crt(
@@ -19,7 +21,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         residues: Vec<AssignedValue<N>>,
     ) -> Result<(), Error> {
         let main_gate = self.main_gate();
-        let (zero, one) = (N::zero(), N::one());
+        let (zero, one) = (N::ZERO, N::ONE);
 
         // Constrain residues
         let lsh_one = self.rns.left_shifter(1);
@@ -75,7 +77,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         b: &AssignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>,
     ) -> Result<AssignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>, Error> {
         let main_gate = self.main_gate();
-        let (zero, one) = (N::zero(), N::one());
+        let (zero, one) = (N::ZERO, N::ONE);
 
         let negative_wrong_modulus = self.rns.negative_wrong_modulus_decomposed;
 
@@ -197,7 +199,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         b: &Integer<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>,
     ) -> Result<AssignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>, Error> {
         let main_gate = self.main_gate();
-        let (zero, one) = (N::zero(), N::one());
+        let (zero, one) = (N::ZERO, N::ONE);
 
         let negative_wrong_modulus = self.rns.negative_wrong_modulus_decomposed;
 
@@ -265,7 +267,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         b: &AssignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>,
     ) -> Result<(), Error> {
         let main_gate = self.main_gate();
-        let (zero, one) = (N::zero(), N::one());
+        let (zero, one) = (N::ZERO, N::ONE);
 
         let negative_wrong_modulus = self.rns.negative_wrong_modulus_decomposed;
 

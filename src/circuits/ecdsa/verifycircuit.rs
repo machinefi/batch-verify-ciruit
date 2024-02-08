@@ -1,15 +1,17 @@
 use std::ops::Add;
 use std::{marker::PhantomData, ops::Mul};
 
-use group::ff::Field;
+// use group::ff::Field;
 use group::Curve;
 use group::prime::PrimeCurveAffine;
+use halo2_curves::group::Curve;
 use halo2_proofs::{circuit::{Layouter, SimpleFloorPlanner}, halo2curves::{CurveAffine, CurveExt}, plonk::{Circuit, ConstraintSystem, Error}};
 use rand::thread_rng;
 use sha2::{Digest, Sha256};
 
 use crate::circuits::halo2wrong::utils::{big_to_fe, fe_to_big};
-use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use crate::circuits::{ecc::{EccConfig, GeneralEccChip}, halo2wrong::RegionCtx, integer::{AssignedInteger, IntegerInstructions, Range, NUMBER_OF_LOOKUP_LIMBS}, maingate::{MainGate, MainGateConfig, RangeChip, RangeConfig, RangeInstructions}};
 
 use super::ecdsa::{AssignedEcdsaSig, AssignedPublicKey, EcdsaChip};
@@ -21,7 +23,7 @@ use super::ecdsa::{AssignedEcdsaSig, AssignedPublicKey, EcdsaChip};
 // use ecc::maingate::fe_to_big;
 
 // use halo2::arithmetic::CurveAffine;
-// use halo2::arithmetic::FieldExt;
+// use halo2::arithmetic::Field;
 // use halo2::dev::MockProver;
 // use num_bigint::BigUint;
 // use rand_core::OsRng;
@@ -41,7 +43,7 @@ pub struct CircuitEcdsaVerifyConfig {
 }
 
 impl CircuitEcdsaVerifyConfig {
-    pub fn new<C: CurveAffine, N: FieldExt>(meta: &mut ConstraintSystem<N>) -> Self {
+    pub fn new<C: CurveAffine, N: PrimeField>(meta: &mut ConstraintSystem<N>) -> Self {
         let (rns_base, rns_scalar) =
             GeneralEccChip::<C, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>::rns();
         let main_gate_config = MainGate::<N>::configure(meta);
@@ -60,7 +62,7 @@ impl CircuitEcdsaVerifyConfig {
         EccConfig::new(self.range_config.clone(), self.main_gate_config.clone())
     }
 
-    pub fn config_range<N: FieldExt>(
+    pub fn config_range<N: PrimeField>(
         &self,
         layouter: &mut impl Layouter<N>,
     ) -> Result<(), Error> {
@@ -93,14 +95,14 @@ impl<E: CurveAffine> BatchEcdsaVerifyInput<E> {
 }
 
 #[derive(Default, Clone)]
-pub struct IntegratedCircuit<E: CurveAffine, N: FieldExt> {
+pub struct IntegratedCircuit<E: CurveAffine, N: PrimeField> {
     pub aux_generator: E,
     pub window_size: usize,
     pub batch_size: usize,
     pub _marker: PhantomData<N>,
 }
 
-impl<E: CurveAffine, N: FieldExt> Circuit<N> for IntegratedCircuit<E, N> {
+impl<E: CurveAffine, N: PrimeField> Circuit<N> for IntegratedCircuit<E, N> {
     type Config = CircuitEcdsaVerifyConfig;
     type FloorPlanner = SimpleFloorPlanner;
 

@@ -2,7 +2,8 @@ use super::{make_mul_aux, AssignedPoint, EccConfig, MulAux, Point};
 // use crate::halo2;
 use crate::circuits::integer::rns::{Integer, Rns};
 use crate::circuits::integer::{IntegerChip, IntegerInstructions, Range, UnassignedInteger};
-use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use halo2_curves::CurveAffine;
 // use crate::maingate;
 use halo2_proofs::circuit::Layouter;
@@ -21,7 +22,7 @@ mod mul;
 #[allow(clippy::type_complexity)]
 pub struct GeneralEccChip<
     Emulated: CurveAffine,
-    N: FieldExt,
+    N: PrimeField,
     const NUMBER_OF_LIMBS: usize,
     const BIT_LEN_LIMB: usize,
 > {
@@ -44,7 +45,7 @@ pub struct GeneralEccChip<
 
 impl<
         Emulated: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > GeneralEccChip<Emulated, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
@@ -165,7 +166,7 @@ impl<
 
 impl<
         Emulated: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > GeneralEccChip<Emulated, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
@@ -407,7 +408,8 @@ mod tests {
     use crate::circuits::integer::rns::Rns;
     use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
     use crate::circuits::integer::{AssignedInteger, IntegerInstructions};
-    use crate::circuits::FieldExt;
+    use halo2_proofs::arithmetic::Field;
+    use halo2_proofs::halo2curves::ff::PrimeField;
     use group::{Curve as _, Group};
     use halo2_curves::CurveAffine;
     use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
@@ -426,7 +428,7 @@ mod tests {
     #[allow(clippy::type_complexity)]
     fn setup<
         C: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     >(
@@ -463,7 +465,7 @@ mod tests {
     impl TestCircuitConfig {
         fn new<
             C: CurveAffine,
-            N: FieldExt,
+            N: PrimeField,
             const NUMBER_OF_LIMBS: usize,
             const BIT_LEN_LIMB: usize,
         >(
@@ -484,7 +486,7 @@ mod tests {
             }
         }
 
-        fn config_range<N: FieldExt>(&self, layouter: &mut impl Layouter<N>) -> Result<(), Error> {
+        fn config_range<N: PrimeField>(&self, layouter: &mut impl Layouter<N>) -> Result<(), Error> {
             let bit_len_lookup = BIT_LEN_LIMB / NUMBER_OF_LOOKUP_LIMBS;
             let range_chip = RangeChip::<N>::new(self.range_config.clone(), bit_len_lookup);
             range_chip.load_limb_range_table(layouter)?;
@@ -497,14 +499,14 @@ mod tests {
     #[derive(Clone, Debug)]
     struct TestEccAddition<
         C: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > {
         _marker: PhantomData<(C, N)>,
     }
 
-    impl<C: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+    impl<C: CurveAffine, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
         Circuit<N> for TestEccAddition<C, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     {
         type Config = TestCircuitConfig;
@@ -581,7 +583,7 @@ mod tests {
     fn test_general_ecc_addition_circuit() {
         fn run<
             C: CurveAffine,
-            N: FieldExt,
+            N: PrimeField,
             const NUMBER_OF_LIMBS: usize,
             const BIT_LEN_LIMB: usize,
         >() {
@@ -623,7 +625,7 @@ mod tests {
     #[derive(Default, Clone, Debug)]
     struct TestEccPublicInput<
         C: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > {
@@ -632,7 +634,7 @@ mod tests {
         _marker: PhantomData<N>,
     }
 
-    impl<C: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+    impl<C: CurveAffine, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
         Circuit<N> for TestEccPublicInput<C, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     {
         type Config = TestCircuitConfig;
@@ -695,7 +697,7 @@ mod tests {
     fn test_general_ecc_public_input() {
         fn run<
             C: CurveAffine,
-            N: FieldExt,
+            N: PrimeField,
             const NUMBER_OF_LIMBS: usize,
             const BIT_LEN_LIMB: usize,
         >() {
@@ -749,7 +751,7 @@ mod tests {
     #[derive(Default, Clone, Debug)]
     struct TestEccMul<
         C: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > {
@@ -758,7 +760,7 @@ mod tests {
         _marker: PhantomData<N>,
     }
 
-    impl<C: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+    impl<C: CurveAffine, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
         Circuit<N> for TestEccMul<C, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     {
         type Config = TestCircuitConfig;
@@ -827,7 +829,7 @@ mod tests {
     fn test_general_ecc_mul_circuit() {
         fn run<
             C: CurveAffine,
-            N: FieldExt,
+            N: PrimeField,
             const NUMBER_OF_LIMBS: usize,
             const BIT_LEN_LIMB: usize,
         >() {
@@ -877,7 +879,7 @@ mod tests {
     #[derive(Default, Clone, Debug)]
     struct TestEccBatchMul<
         C: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > {
@@ -887,7 +889,7 @@ mod tests {
         _marker: PhantomData<N>,
     }
 
-    impl<C: CurveAffine, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+    impl<C: CurveAffine, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
         Circuit<N> for TestEccBatchMul<C, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     {
         type Config = TestCircuitConfig;
@@ -970,7 +972,7 @@ mod tests {
     fn test_general_ecc_mul_batch_circuit() {
         fn run<
             C: CurveAffine,
-            N: FieldExt,
+            N: PrimeField,
             const NUMBER_OF_LIMBS: usize,
             const BIT_LEN_LIMB: usize,
         >() {

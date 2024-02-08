@@ -1,20 +1,22 @@
 use halo2_proofs::{
+    arithmetic::Field,
     circuit::{AssignedCell, Cell, Region, Value},
     plonk::{Advice, Column, Error, Fixed, Selector},
+    halo2curves::ff::PrimeField,
 };
 
 pub mod utils;
 pub use halo2_proofs;
 pub use halo2_curves as curves;
 
-use super::FieldExt;
+// use super::FieldExt;
 
-pub struct RegionCtx<'a, 'b, F: FieldExt> {
+pub struct RegionCtx<'a, 'b, F: Field> {
     pub region: &'a mut Region<'b, F>,
     pub offset: &'a mut usize,
 }
 
-impl<'a, 'b, F: FieldExt> RegionCtx<'a, 'b, F> {
+impl<'a, 'b, F: PrimeField> RegionCtx<'a, 'b, F> {
     pub fn new(region: &'a mut Region<'b, F>, offset: &'a mut usize) -> RegionCtx<'a, 'b, F> {
         RegionCtx { region, offset }
     }

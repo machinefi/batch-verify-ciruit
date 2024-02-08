@@ -4,11 +4,12 @@ use halo2_curves::CurveAffine;
 use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::RegionCtx;
 use crate::circuits::integer::IntegerInstructions;
-use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 
 impl<
         Emulated: CurveAffine,
-        N: FieldExt,
+        N: PrimeField,
         const NUMBER_OF_LIMBS: usize,
         const BIT_LEN_LIMB: usize,
     > GeneralEccChip<Emulated, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>

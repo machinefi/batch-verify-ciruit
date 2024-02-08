@@ -21,7 +21,8 @@ pub use instructions::{IntegerInstructions, Range};
 #[cfg(test)]
 use halo2_curves as curves;
 
-use super::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 
 
 
@@ -39,7 +40,7 @@ pub const NUMBER_OF_LOOKUP_LIMBS: usize = 4;
 
 /// AssignedLimb is a limb of an non native integer
 #[derive(Debug, Clone)]
-pub struct AssignedLimb<F: FieldExt> {
+pub struct AssignedLimb<F: PrimeField> {
     // Witness value
     value: Option<Limb<F>>,
     // Cell that this value accomadates
@@ -49,20 +50,20 @@ pub struct AssignedLimb<F: FieldExt> {
 }
 
 /// `AssignedLimb` can be also represented as `AssignedValue`
-impl<F: FieldExt> From<AssignedLimb<F>> for AssignedValue<F> {
+impl<F: PrimeField> From<AssignedLimb<F>> for AssignedValue<F> {
     fn from(limb: AssignedLimb<F>) -> Self {
         AssignedValue::new(limb.cell(), limb.value())
     }
 }
 
 /// `AssignedLimb` can be also represented as `AssignedValue`
-impl<F: FieldExt> From<&AssignedLimb<F>> for AssignedValue<F> {
+impl<F: PrimeField> From<&AssignedLimb<F>> for AssignedValue<F> {
     fn from(limb: &AssignedLimb<F>) -> Self {
         AssignedValue::new(limb.cell(), limb.value())
     }
 }
 
-impl<F: FieldExt> Assigned<F> for AssignedLimb<F> {
+impl<F: PrimeField> Assigned<F> for AssignedLimb<F> {
     fn value(&self) -> Option<F> {
         self.value.as_ref().map(|value| value.fe())
     }
@@ -71,7 +72,7 @@ impl<F: FieldExt> Assigned<F> for AssignedLimb<F> {
     }
 }
 
-impl<F: FieldExt> Assigned<F> for &AssignedLimb<F> {
+impl<F: PrimeField> Assigned<F> for &AssignedLimb<F> {
     fn value(&self) -> Option<F> {
         self.value.as_ref().map(|value| value.fe())
     }
@@ -80,7 +81,7 @@ impl<F: FieldExt> Assigned<F> for &AssignedLimb<F> {
     }
 }
 
-impl<F: FieldExt> AssignedLimb<F> {
+impl<F: PrimeField> AssignedLimb<F> {
     /// Given an assigned value and expected maximum value constructs new
     /// `AssignedLimb`
     fn from(assigned: AssignedValue<F>, max_val: big_uint) -> Self {
@@ -131,13 +132,13 @@ impl<F: FieldExt> AssignedLimb<F> {
 /// Witness integer that is about to be assigned.
 #[derive(Debug, Clone)]
 pub struct UnassignedInteger<
-    W: FieldExt,
-    N: FieldExt,
+    W: PrimeField,
+    N: PrimeField,
     const NUMBER_OF_LIMBS: usize,
     const BIT_LEN_LIMB: usize,
 >(Option<Integer<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>);
 
-impl<'a, W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<'a, W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     From<Option<Integer<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>>
     for UnassignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
@@ -146,7 +147,7 @@ impl<'a, W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_L
     }
 }
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     UnassignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     /// Returns indexed limb as ÏUnassignedValue`
@@ -158,20 +159,20 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
 ///
 #[derive(Debug, Clone)]
 pub struct AssignedInteger<
-    W: FieldExt,
-    N: FieldExt,
+    W: PrimeField,
+    N: PrimeField,
     const NUMBER_OF_LIMBS: usize,
     const BIT_LEN_LIMB: usize,
 > {
     // Limbs of the emulated integer
     limbs: [AssignedLimb<N>; NUMBER_OF_LIMBS],
-    /// Value in the scalar field
+    /// Value in the scalar PrimeField
     native_value: AssignedValue<N>,
     /// Share rns across all `AssignedIntegers`s
     rns: Rc<Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>,
 }
 
-impl<'a, W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<'a, W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     AssignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     /// Creates a new [`AssignedInteger`].

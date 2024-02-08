@@ -1,14 +1,15 @@
 use super::{IntegerChip, Range};
 use crate::circuits::integer::rns::{Common, Integer};
 use crate::circuits::integer::{AssignedInteger, AssignedLimb, UnassignedInteger};
-use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::{fe_to_big, MainGateInstructions, RangeInstructions, RegionCtx, Term};
 use num_bigint::BigUint as big_uint;
 use num_traits::One;
 use std::rc::Rc;
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     pub(super) fn assign_integer_generic(
@@ -74,7 +75,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
 
         Ok(self.new_assigned_integer(
             &limbs.try_into().unwrap(),
-            main_gate.compose(ctx, &limbs_to_compose[..], N::zero())?,
+            main_gate.compose(ctx, &limbs_to_compose[..], N::ZERO)?,
         ))
     }
 

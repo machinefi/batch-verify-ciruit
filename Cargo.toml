@@ -26,6 +26,7 @@ sha2 = "0.9"
 hex = "0.4.3"
 
 # generator
+halo2_wrong ={ git = "https://github.com/davidnevadoc/halo2wrong.git" }
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v2023_04_20", features = ["dev-graph"]}
 halo2_curves = { git = "https://github.com/privacy-scaling-explorations/halo2curves", tag = "0.3.2", package = "halo2curves" }
 snark_verifier = { git = "https://github.com/privacy-scaling-explorations/snark-verifier.git", rev="fedd7a8", package = "snark-verifier" }

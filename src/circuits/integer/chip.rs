@@ -4,7 +4,8 @@ use super::{AssignedInteger, AssignedLimb, UnassignedInteger};
 use crate::circuits::integer::instructions::{IntegerInstructions, Range};
 use crate::circuits::integer::rns::{Common, Integer, Rns};
 use crate::circuits::integer::NUMBER_OF_LOOKUP_LIMBS;
-use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use halo2_proofs::plonk::Error;
 use crate::circuits::maingate::{AssignedCondition, AssignedValue, MainGateInstructions, RegionCtx};
 use crate::circuits::maingate::{MainGate, MainGateConfig};
@@ -44,8 +45,8 @@ impl IntegerConfig {
 /// Chip for integer instructions
 #[derive(Debug)]
 pub struct IntegerChip<
-    W: FieldExt,
-    N: FieldExt,
+    W: PrimeField,
+    N: PrimeField,
     const NUMBER_OF_LIMBS: usize,
     const BIT_LEN_LIMB: usize,
 > {
@@ -55,7 +56,7 @@ pub struct IntegerChip<
     rns: Rc<Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>,
 }
 
-impl<'a, W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<'a, W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     /// Creates a new [`AssignedInteger`] from its limb representation and its
@@ -69,11 +70,11 @@ impl<'a, W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_L
     }
 }
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerInstructions<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     for IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
-    fn reduce_external<T: FieldExt>(
+    fn reduce_external<T: PrimeField>(
         &self,
         ctx: &mut RegionCtx<'_, '_, N>,
         // TODO: external integer might have different parameter settings
@@ -512,7 +513,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
     }
 }
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     /// Create new ['IntegerChip'] with the configuration and a shared [`Rns`]
@@ -538,7 +539,8 @@ mod tests {
     use super::{IntegerChip, IntegerConfig, IntegerInstructions, Range};
     use crate::circuits::integer::rns::{Common, Integer, Rns};
     use crate::circuits::integer::{UnassignedInteger, NUMBER_OF_LOOKUP_LIMBS};
-    use crate::circuits::FieldExt;
+    use halo2_proofs::arithmetic::Field;
+    use halo2_proofs::halo2curves::ff::PrimeField;
     use core::panic;
     use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
     use halo2_proofs::dev::MockProver;
@@ -554,19 +556,19 @@ mod tests {
 
     const NUMBER_OF_LIMBS: usize = 4;
 
-    fn rns<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize>(
+    fn rns<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize>(
     ) -> Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB> {
         Rns::<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>::construct()
     }
 
-    fn setup<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize>(
+    fn setup<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize>(
     ) -> (Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>, u32) {
         let rns = rns();
         let k: u32 = (rns.bit_len_lookup + 1) as u32;
         (rns, k)
     }
 
-    impl<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize>
+    impl<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize>
         From<Integer<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>
         for UnassignedInteger<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
     {
@@ -575,11 +577,11 @@ mod tests {
         }
     }
 
-    pub(crate) struct TestRNS<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize> {
+    pub(crate) struct TestRNS<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize> {
         rns: Rc<Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>,
     }
 
-    impl<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize> TestRNS<W, N, BIT_LEN_LIMB> {
+    impl<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize> TestRNS<W, N, BIT_LEN_LIMB> {
         pub(crate) fn rand_in_field(&self) -> Integer<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB> {
             Integer::from_fe(W::random(OsRng), Rc::clone(&self.rns))
         }
@@ -661,7 +663,7 @@ mod tests {
     }
 
     impl TestCircuitConfig {
-        fn new<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize>(
+        fn new<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize>(
             meta: &mut ConstraintSystem<N>,
         ) -> Self {
             let main_gate_config = MainGate::<N>::configure(meta);
@@ -683,7 +685,7 @@ mod tests {
             }
         }
 
-        fn config_range<N: FieldExt>(
+        fn config_range<N: PrimeField>(
             &self,
             layouter: &mut impl Layouter<N>,
             bit_len_limb: usize,
@@ -702,11 +704,11 @@ mod tests {
 
 
             #[derive(Clone, Debug)]
-            struct $circuit_name<W: FieldExt, N: FieldExt, const BIT_LEN_LIMB: usize> {
+            struct $circuit_name<W: PrimeField, N: PrimeField, const BIT_LEN_LIMB: usize> {
                 rns: Rc<Rns<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>>,
             }
 
-            impl<W: FieldExt, N: FieldExt,  const BIT_LEN_LIMB: usize> $circuit_name<W, N, BIT_LEN_LIMB> {
+            impl<W: PrimeField, N: PrimeField,  const BIT_LEN_LIMB: usize> $circuit_name<W, N, BIT_LEN_LIMB> {
                 fn integer_chip(&self, config:TestCircuitConfig) -> IntegerChip<W, N, NUMBER_OF_LIMBS,BIT_LEN_LIMB>{
                     IntegerChip::<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>::new(config.integer_chip_config(), Rc::clone(&self.rns))
                 }
@@ -717,7 +719,7 @@ mod tests {
 
             }
 
-            impl<W: FieldExt, N: FieldExt,  const BIT_LEN_LIMB: usize> Circuit<N> for $circuit_name<W, N, BIT_LEN_LIMB> {
+            impl<W: PrimeField, N: PrimeField,  const BIT_LEN_LIMB: usize> Circuit<N> for $circuit_name<W, N, BIT_LEN_LIMB> {
                 type Config = TestCircuitConfig;
                 type FloorPlanner = SimpleFloorPlanner;
 
@@ -1336,7 +1338,7 @@ mod tests {
 
                     let a = t.rand_in_remainder_range().into();
                     let b = t.rand_in_remainder_range().into();
-                    let cond = N::zero();
+                    let cond = N::ZERO;
                     let cond = Some(cond).into();
 
                     let a = integer_chip.assign_integer(ctx, a, Range::Remainder)?;
@@ -1352,7 +1354,7 @@ mod tests {
 
                     let a = t.rand_in_remainder_range().into();
                     let b = t.rand_in_remainder_range().into();
-                    let cond = N::one();
+                    let cond = N::ONE;
                     let cond = Some(cond).into();
 
                     let a = integer_chip.assign_integer(ctx, a, Range::Remainder)?;
@@ -1368,7 +1370,7 @@ mod tests {
 
                     let a = t.rand_in_remainder_range().into();
                     let b = t.rand_in_remainder_range();
-                    let cond = N::zero();
+                    let cond = N::ZERO;
                     let cond = Some(cond).into();
 
                     let a = integer_chip.assign_integer(ctx, a, Range::Remainder)?;
@@ -1384,7 +1386,7 @@ mod tests {
 
                     let a = t.rand_in_remainder_range().into();
                     let b = t.rand_in_remainder_range();
-                    let cond = N::one();
+                    let cond = N::ONE;
                     let cond = Some(cond).into();
 
                     let a = integer_chip.assign_integer(ctx, a, Range::Remainder)?;
@@ -1429,7 +1431,7 @@ mod tests {
                         );
                         assert_eq!(expected.len(), decomposed.len());
                         for (c, expected) in decomposed.iter().zip(expected.into_iter()) {
-                            if expected != W::zero() {
+                            if expected != W::ZERO {
                                 main_gate.assert_one(ctx, &c.into())?;
                             } else {
                                 main_gate.assert_zero(ctx, &c.into())?;

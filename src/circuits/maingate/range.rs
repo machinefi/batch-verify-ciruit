@@ -26,7 +26,9 @@ use halo2_proofs::poly::Rotation;
 use crate::circuits::maingate::instructions::{CombinationOptionCommon, MainGateInstructions, Term};
 use crate::circuits::maingate::{AssignedValue, UnassignedValue};
 use crate::circuits::halo2wrong::RegionCtx;
-use crate::circuits::FieldExt;
+// use crate::circuits::FieldExt;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 
 const NUMBER_OF_LOOKUP_LIMBS: usize = 4;
 
@@ -48,13 +50,13 @@ pub struct RangeConfig {
 
 /// ['RangeChip'] applies binary range constraints
 #[derive(Debug)]
-pub struct RangeChip<F: FieldExt> {
+pub struct RangeChip<F: PrimeField> {
     config: RangeConfig,
     base_bit_len: usize,
     left_shifter: Vec<F>,
 }
 
-impl<F: FieldExt> RangeChip<F> {
+impl<F: PrimeField> RangeChip<F> {
     fn get_table(&self, bit_len: usize) -> Result<&TableConfig, Error> {
         let table_config = self
             .config
@@ -74,7 +76,7 @@ impl<F: FieldExt> RangeChip<F> {
     }
 }
 
-impl<F: FieldExt> Chip<F> for RangeChip<F> {
+impl<F: PrimeField> Chip<F> for RangeChip<F> {
     type Config = RangeConfig;
     type Loaded = ();
     fn config(&self) -> &Self::Config {
@@ -86,7 +88,7 @@ impl<F: FieldExt> Chip<F> for RangeChip<F> {
 }
 
 /// Generic chip interface for bitwise ranging values
-pub trait RangeInstructions<F: FieldExt>: Chip<F> {
+pub trait RangeInstructions<F: PrimeField>: Chip<F> {
     /// Ranges new witness with given bit lenght. Expects bit_le
     fn range_value(
         &self,
@@ -101,7 +103,7 @@ pub trait RangeInstructions<F: FieldExt>: Chip<F> {
     fn load_overflow_range_tables(&self, layouter: &mut impl Layouter<F>) -> Result<(), Error>;
 }
 
-impl<F: FieldExt> RangeInstructions<F> for RangeChip<F> {
+impl<F: PrimeField> RangeInstructions<F> for RangeChip<F> {
     fn range_value(
         &self,
         ctx: &mut RegionCtx<'_, '_, F>,
@@ -109,7 +111,7 @@ impl<F: FieldExt> RangeInstructions<F> for RangeChip<F> {
         bit_len: usize,
     ) -> Result<AssignedValue<F>, Error> {
         let main_gate = self.main_gate();
-        let (one, zero) = (F::one(), F::zero());
+        let (one, zero) = (F::ONE, F::ZERO);
         let r = self.left_shifter[0];
         let rr = self.left_shifter[1];
         let rrr = self.left_shifter[2];
@@ -307,7 +309,7 @@ impl<F: FieldExt> RangeInstructions<F> for RangeChip<F> {
     }
 }
 
-impl<F: FieldExt> RangeChip<F> {
+impl<F: PrimeField> RangeChip<F> {
     /// Given config creates new chip that implements ranging
     pub fn new(config: RangeConfig, base_bit_len: usize) -> Self {
         let two = F::from(2);
@@ -398,7 +400,8 @@ impl<F: FieldExt> RangeChip<F> {
 mod tests {
 
     use crate::circuits::halo2wrong::RegionCtx;
-    use crate::circuits::FieldExt;
+    use halo2_proofs::arithmetic::Field;
+    use halo2_proofs::halo2curves::ff::PrimeField;
     use super::{RangeChip, RangeConfig, RangeInstructions};
     use crate::circuits::halo2wrong::curves::pasta::Fp;
     use halo2_proofs::circuit::{Layouter, SimpleFloorPlanner};
@@ -423,7 +426,7 @@ mod tests {
             16
         }
 
-        fn new<F: FieldExt>(meta: &mut ConstraintSystem<F>) -> Self {
+        fn new<F: PrimeField>(meta: &mut ConstraintSystem<F>) -> Self {
             let main_gate_config = MainGate::<F>::configure(meta);
             let fine_tune_bit_lengths = Self::fine_tune_bit_lengths();
             let range_config =
@@ -431,21 +434,21 @@ mod tests {
             Self { range_config }
         }
 
-        fn main_gate<F: FieldExt>(&self) -> MainGate<F> {
+        fn main_gate<F: PrimeField>(&self) -> MainGate<F> {
             MainGate::<F>::new(self.range_config.main_gate_config.clone())
         }
 
-        fn range_chip<F: FieldExt>(&self) -> RangeChip<F> {
+        fn range_chip<F: PrimeField>(&self) -> RangeChip<F> {
             RangeChip::<F>::new(self.range_config.clone(), Self::base_bit_len())
         }
     }
 
     #[derive(Default, Clone, Debug)]
-    struct TestCircuit<F: FieldExt> {
+    struct TestCircuit<F: PrimeField> {
         input: Vec<(usize, Option<F>)>,
     }
 
-    impl<F: FieldExt> Circuit<F> for TestCircuit<F> {
+    impl<F: PrimeField> Circuit<F> for TestCircuit<F> {
         type Config = TestCircuitConfig;
         type FloorPlanner = SimpleFloorPlanner;
 

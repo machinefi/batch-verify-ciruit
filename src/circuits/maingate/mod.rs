@@ -5,10 +5,12 @@
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 
-use super::{halo2wrong, FieldExt};
+use super::halo2wrong;
 
 use halo2_proofs::plonk::Error;
 use halo2_proofs::circuit::Cell;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use halo2wrong::utils::decompose;
 use std::marker::PhantomData;
 
@@ -27,7 +29,7 @@ use halo2wrong::curves;
 
 
 /// Helper trait for assigned values across halo2stack.
-pub trait Assigned<F: FieldExt> {
+pub trait Assigned<F: PrimeField> {
     /// Returns witness value
     fn value(&self) -> Option<F>;
     /// Applies copy constraion to the given `Assigned` witness
@@ -48,24 +50,24 @@ pub trait Assigned<F: FieldExt> {
 /// `AssignedCondition` is expected to be a witness their assigned value is `1`
 /// or `0`.
 #[derive(Debug, Copy, Clone)]
-pub struct AssignedCondition<F: FieldExt> {
+pub struct AssignedCondition<F: PrimeField> {
     bool_value: Option<bool>,
     cell: Cell,
     _marker: PhantomData<F>,
 }
 
-impl<F: FieldExt> From<AssignedValue<F>> for AssignedCondition<F> {
+impl<F: PrimeField> From<AssignedValue<F>> for AssignedCondition<F> {
     fn from(assigned: AssignedValue<F>) -> Self {
         AssignedCondition::new(assigned.cell, assigned.value)
     }
 }
 
-impl<F: FieldExt> AssignedCondition<F> {
+impl<F: PrimeField> AssignedCondition<F> {
     /// Creates a new [`AssignedCondition`] from a field element.
     /// It will have false value if the provided element is zero
     /// and true otherwise
     pub fn new(cell: Cell, value: Option<F>) -> Self {
-        let bool_value = value.map(|value| value != F::zero());
+        let bool_value = value.map(|value| value != F::ZERO);
         AssignedCondition {
             bool_value,
             cell,
@@ -74,20 +76,20 @@ impl<F: FieldExt> AssignedCondition<F> {
     }
 }
 
-impl<F: FieldExt> Assigned<F> for AssignedCondition<F> {
+impl<F: PrimeField> Assigned<F> for AssignedCondition<F> {
     fn value(&self) -> Option<F> {
         self.bool_value
-            .map(|value| if value { F::one() } else { F::zero() })
+            .map(|value| if value { F::ONE } else { F::ZERO })
     }
     fn cell(&self) -> Cell {
         self.cell
     }
 }
 
-impl<F: FieldExt> Assigned<F> for &AssignedCondition<F> {
+impl<F: PrimeField> Assigned<F> for &AssignedCondition<F> {
     fn value(&self) -> Option<F> {
         self.bool_value
-            .map(|value| if value { F::one() } else { F::zero() })
+            .map(|value| if value { F::ONE } else { F::ZERO })
     }
     fn cell(&self) -> Cell {
         self.cell
@@ -97,7 +99,7 @@ impl<F: FieldExt> Assigned<F> for &AssignedCondition<F> {
 /// [`AssignedValue`] is a witness value we enforce their validity in gates and
 /// apply equality constraint between other assigned values.
 #[derive(Debug, Copy, Clone)]
-pub struct AssignedValue<F: FieldExt> {
+pub struct AssignedValue<F: PrimeField> {
     // Witness value. shoulde be `None` at synthesis time must be `Some ` at prover time.
     value: Option<F>,
     // `cell` is where this witness accomadates. `cell` will be needed to constrain equality
@@ -105,7 +107,7 @@ pub struct AssignedValue<F: FieldExt> {
     cell: Cell,
 }
 
-impl<F: FieldExt> From<AssignedCondition<F>> for AssignedValue<F> {
+impl<F: PrimeField> From<AssignedCondition<F>> for AssignedValue<F> {
     fn from(cond: AssignedCondition<F>) -> Self {
         AssignedValue {
             value: (&cond).value(),
@@ -114,7 +116,7 @@ impl<F: FieldExt> From<AssignedCondition<F>> for AssignedValue<F> {
     }
 }
 
-impl<F: FieldExt> From<&AssignedCondition<F>> for AssignedValue<F> {
+impl<F: PrimeField> From<&AssignedCondition<F>> for AssignedValue<F> {
     fn from(cond: &AssignedCondition<F>) -> Self {
         AssignedValue {
             value: (&cond).value(),
@@ -123,7 +125,7 @@ impl<F: FieldExt> From<&AssignedCondition<F>> for AssignedValue<F> {
     }
 }
 
-impl<F: FieldExt> Assigned<F> for AssignedValue<F> {
+impl<F: PrimeField> Assigned<F> for AssignedValue<F> {
     fn value(&self) -> Option<F> {
         self.value
     }
@@ -132,7 +134,7 @@ impl<F: FieldExt> Assigned<F> for AssignedValue<F> {
     }
 }
 
-impl<F: FieldExt> Assigned<F> for &AssignedValue<F> {
+impl<F: PrimeField> Assigned<F> for &AssignedValue<F> {
     fn value(&self) -> Option<F> {
         self.value
     }
@@ -141,7 +143,7 @@ impl<F: FieldExt> Assigned<F> for &AssignedValue<F> {
     }
 }
 
-impl<F: FieldExt> AssignedValue<F> {
+impl<F: PrimeField> AssignedValue<F> {
     /// Creates a new [`AssignedValue`] from a field element
     pub fn new(cell: Cell, value: Option<F>) -> Self {
         AssignedValue { value, cell }
@@ -150,27 +152,27 @@ impl<F: FieldExt> AssignedValue<F> {
 
 /// Value of a field element without an assigned cell in the circuit
 #[derive(Debug, Clone)]
-pub struct UnassignedValue<F: FieldExt>(Option<F>);
+pub struct UnassignedValue<F: PrimeField>(Option<F>);
 
-impl<F: FieldExt> From<Option<F>> for UnassignedValue<F> {
+impl<F: PrimeField> From<Option<F>> for UnassignedValue<F> {
     fn from(value: Option<F>) -> Self {
         UnassignedValue(value)
     }
 }
 
-impl<F: FieldExt> From<&Option<F>> for UnassignedValue<F> {
+impl<F: PrimeField> From<&Option<F>> for UnassignedValue<F> {
     fn from(value: &Option<F>) -> Self {
         UnassignedValue(*value)
     }
 }
 
-impl<F: FieldExt> From<UnassignedValue<F>> for Option<F> {
+impl<F: PrimeField> From<UnassignedValue<F>> for Option<F> {
     fn from(value: UnassignedValue<F>) -> Self {
         value.0
     }
 }
 
-impl<F: FieldExt> UnassignedValue<F> {
+impl<F: PrimeField> UnassignedValue<F> {
     /// Returns the value
     pub fn value(&self) -> Option<F> {
         self.0

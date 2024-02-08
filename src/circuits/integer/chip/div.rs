@@ -1,14 +1,16 @@
 use super::{IntegerChip, IntegerInstructions, Range};
 use crate::circuits::integer::rns::MaybeReduced;
-use crate::circuits::integer::{AssignedInteger, FieldExt};
+use crate::circuits::integer::AssignedInteger;
 use halo2_proofs::plonk::Error;
+use halo2_proofs::arithmetic::Field;
+use halo2_proofs::halo2curves::ff::PrimeField;
 use crate::circuits::maingate::Assigned;
 use crate::circuits::maingate::{
     AssignedCondition, AssignedValue, CombinationOptionCommon, MainGateInstructions,
     RangeInstructions, RegionCtx, Term,
 };
 
-impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
+impl<W: PrimeField, N: PrimeField, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB: usize>
     IntegerChip<W, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>
 {
     pub(super) fn div_generic(
@@ -41,7 +43,7 @@ impl<W: FieldExt, N: FieldExt, const NUMBER_OF_LIMBS: usize, const BIT_LEN_LIMB:
         // self + w * quotient = b * result
 
         let main_gate = self.main_gate();
-        let (zero, one) = (N::zero(), N::one());
+        let (zero, one) = (N::ZERO, N::ONE);
 
         let negative_wrong_modulus = self.rns.negative_wrong_modulus_decomposed;
 
