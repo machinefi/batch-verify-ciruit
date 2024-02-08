@@ -29,52 +29,52 @@ fn main() {
         _marker: PhantomData,
     };
 
-    // println!("gen_pk start");
-    // let start = Instant::now();
-    // let pk = gen_pk(&params, &empty_circuit);
-    // println!("gen_pk end");
-    // let duration = start.elapsed();
+    println!("gen_pk start");
+    let start = Instant::now();
+    let pk = gen_pk(&params, &empty_circuit);
+    println!("gen_pk end");
+    let duration = start.elapsed();
 
-    // println!("Time elapsed in expensive_function() is: {:?}", duration);
+    println!("Time elapsed in expensive_function() is: {:?}", duration);
 
-    // // TODO instance circuit
-    // // let mut rng = thread_rng();
-    // // let aux_generator = <Secp256k1 as CurveAffine>::CurveExt::random(&mut rng).to_affine();
-    // // let circuit = IntegratedCircuit::<Secp256k1, BnScalar> {
-    // //     aux_generator,
-    // //     window_size: 4,
-    // //     batch_size: 4,
-    // //     _marker: PhantomData,
-    // // };
+    // TODO instance circuit
+    // let mut rng = thread_rng();
+    // let aux_generator = <Secp256k1 as CurveAffine>::CurveExt::random(&mut rng).to_affine();
+    // let circuit = IntegratedCircuit::<Secp256k1, BnScalar> {
+    //     aux_generator,
+    //     window_size: 4,
+    //     batch_size: 4,
+    //     _marker: PhantomData,
+    // };
 
-    // // TODO public info
-    // // let instances = vec![vec![difficulty]];
-    // let instances = vec![vec![]];
+    // TODO public info
+    // let instances = vec![vec![difficulty]];
+    let instances = vec![vec![]];
 
-    // println!("gen_proof start");
-    // let start = Instant::now();
-    // let proof = gen_proof(&params, &pk, empty_circuit.clone(), &instances);
-    // println!("gen_proof end");
-    // let duration = start.elapsed();
+    println!("gen_proof start");
+    let start = Instant::now();
+    let proof = gen_proof(&params, &pk, empty_circuit.clone(), &instances);
+    println!("gen_proof end");
+    let duration = start.elapsed();
 
-    // println!("Time elapsed in expensive_function() is: {:?}", duration);
+    println!("Time elapsed in expensive_function() is: {:?}", duration);
 
-    // let calldata = encode_calldata(&instances, &proof);
+    let calldata = encode_calldata(&instances, &proof);
 
-    // println!(
-    //     r#"{{
-    // "proof": "0x{}",
-    // "calldata": "0x{}"
-    // }}"#,
-    //     hex::encode(&proof),
-    //     hex::encode(calldata),
-    // );
-
-    let sol_code = gen_sol_verifier(&params, empty_circuit, vec![])
-                .expect("generate solidity file error");
     println!(
-       "Generated verifier contract size: {}",
-        evm::compile_solidity(sol_code.as_str()).len()
+        r#"{{
+    "proof": "0x{}",
+    "calldata": "0x{}"
+    }}"#,
+        hex::encode(&proof),
+        hex::encode(calldata),
     );
-    fs::write("Verifier.sol", sol_code).expect("write verifier solidity error");
+
+    // let sol_code = gen_sol_verifier(&params, empty_circuit, vec![])
+    //             .expect("generate solidity file error");
+    // println!(
+    //    "Generated verifier contract size: {}",
+    //     evm::compile_solidity(sol_code.as_str()).len()
+    // );
+    // fs::write("Verifier.sol", sol_code).expect("write verifier solidity error");
 }
