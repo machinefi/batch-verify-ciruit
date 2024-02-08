@@ -213,7 +213,7 @@ impl<E: CurveAffine, N: PrimeField> Circuit<N> for IntegratedCircuit<E, N> {
         layouter
             .assign_region(
                 || "region 0",
-                |mut region| {
+                |region| {
                     let mut assigned_bevi: Vec<(
                         AssignedPublicKey<E::Base, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>,
                         AssignedEcdsaSig<E::Scalar, N, NUMBER_OF_LIMBS, BIT_LEN_LIMB>,

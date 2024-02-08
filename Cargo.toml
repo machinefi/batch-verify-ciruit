@@ -34,6 +34,7 @@ halo2_wrong_ecdsa = { package = "ecdsa", git = "https://github.com/machinefi/hal
 # halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0", features = ["dev-graph"]}
 # halo2_curves = { git = "https://github.com/privacy-scaling-explorations/halo2curves", tag = "0.3.2", package = "halo2curves" }
 # snark_verifier = { git = "https://github.com/privacy-scaling-explorations/snark-verifier.git", rev="fedd7a8", package = "snark-verifier" }
+snark_verifier = { git = "https://github.com/machinefi/snark-verifier", branch = "main", package = "snark-verifier" }
 itertools = "0.11.0"
 plotters = { version = "0.3.0", default-features = true }
 
